@@ -1,0 +1,11 @@
+{
+  "name": "garmin_generator",
+  "version": "0.1.0",
+  "bin": "main.js",
+  "repository": "https://confluence.office.infomaximum.com/pages/viewpage.action?pageId=8101936",
+  "dependencies": {
+    "pug": "latest",
+    "lodash": "latest",
+    "fs-extra": "latest"
+  }
+}
