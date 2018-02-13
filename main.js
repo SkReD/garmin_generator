@@ -7,7 +7,7 @@ const args = require('yargs')
         default: 'Track_' + new Date().toString()
     })
     .option('output-file', {
-        type: 'number',
+        type: 'string',
         describe: 'Куда сохранить результат',
         default: 'garmin_' + new Date().valueOf() + '.gpx'
     })
