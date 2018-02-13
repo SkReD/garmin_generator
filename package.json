@@ -4,8 +4,13 @@
   "bin": "main.js",
   "repository": "https://confluence.office.infomaximum.com/pages/viewpage.action?pageId=8101936",
   "dependencies": {
-    "pug": "latest",
+    "fs-extra": "latest",
     "lodash": "latest",
-    "fs-extra": "latest"
+    "mustache": "^2.3.0",
+    "yargs": "^11.0.0"
+  },
+  "pkg": {
+    "scripts": "main.js",
+    "assets": "track_template.xml"
   }
 }
