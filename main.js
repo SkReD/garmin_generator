@@ -41,15 +41,15 @@ const args = require('yargs')
         describe: 'Конечное время',
         default: new Date().valueOf() / 1000 + 1 * 3600
     })
-    .option('general-height', {
+    .option('--height', {
         type: 'string',
-        describe: 'Средняя высота',
-        default: 260
+        describe: '4 значения выосты для расчета по функции кривой безье',
+        default: '260,260,150,180'
     })
     .option('height-delta', {
         type: 'string',
         describe: 'Разброс высоты',
-        default: 2
+        default: 0.01
     })
     .option('steps-count', {
         type: 'number',
@@ -64,21 +64,28 @@ const args = require('yargs')
     .option('time-delta', {
         type: 'number',
         describe: 'Разброс времени',
-        default: 0.1
+        default: 0.03
     })
     .help('h')
     .alias('h', 'help')
     .parse(process.argv.slice(2));
 
 const fs = require('fs-extra');
-const template = fs.readFileSync('track_template.xml', 'utf-8');
+const path = require('path');
+const template = fs.readFileSync(path.join(__dirname, 'track_template.xml'), 'utf-8');
 const mustache = require('mustache');
 
 const trackpts = [];
 const latitudeStep = (args.endLatitude - args.startLatitude) / args.stepsCount;
 const longitudeStep = (args.endLongitude - args.startLongitude) / args.stepsCount;
 const timeStep = (args.startTime - args.endTime) / args.stepsCount;
-const heightGenerator = () => (Math.random() > 0.5 ? 1 : -1) * Math.random() * args.heightDelta + args.generalHeight;
+const [hp1, hp2, hp3, hp4] = args.height.split(',');
+const heightGenerator = (i) => {
+    const t = i / args.stepsCount;
+    return ((Math.random() > 0.5 ? 1 : -1) * Math.random() * args.heightDelta) +
+        (Math.pow((1 - t), 3) * Number(hp1) + 3 * Math.pow((1 - t), 2) * t * Number(hp2) + 3 * (1 - t) * Math.pow(t, 2) * Number(hp3) +
+            Math.pow(t, 3) * Number(hp4));
+};
 const measure = function(lat1, lon1, lat2, lon2) {  // generally used geo measurement function
     var R = 6378.137; // Radius of earth in KM
     var dLat = lat2 * Math.PI / 180 - lat1 * Math.PI / 180;
@@ -127,7 +134,7 @@ for (let i = 0; i < args.stepsCount; i++) {
     trackpts.push({
         lat,
         lon,
-        ele: heightGenerator(),
+        ele: heightGenerator(i),
         time: new Date(time * 1000).toISOString()
     });
 
