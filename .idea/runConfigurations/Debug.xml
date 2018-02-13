@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Debug" type="NodeJSConfigurationType" factoryName="Node.js" application-parameters="--start-longitude 45.279601765796542 --end-longitude 45.275050476193428 --start-latitude 54.065999910235405 --end-latitude 53.982965257018805 --steps-count 354" path-to-js-file="main.js" working-dir="$PROJECT_DIR$">
+  <configuration default="false" name="Debug" type="NodeJSConfigurationType" factoryName="Node.js" application-parameters="--start-longitude 45.279601765796542 --end-longitude 45.275050476193428 --start-latitude 54.065999910235405 --end-latitude 53.982965257018805 --steps-count 354 --height=260,280,250,180" path-to-js-file="main.js" working-dir="$PROJECT_DIR$">
     <method />
   </configuration>
 </component>
