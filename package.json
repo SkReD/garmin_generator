@@ -10,8 +10,8 @@
     "yargs": "^11.0.0"
   },
   "pkg": {
-    "scripts": "main.js",
-    "assets": "track_template.xml"
+    "scripts": "src/cli.js",
+    "assets": "src/track_template.xml"
   },
   "scripts": {
     "pkg": "pkg main.js --targets win-x86 --output build/garmin_generator.exe --config package.json"
