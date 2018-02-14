@@ -19,12 +19,12 @@
 			</gpxtrkx:TrackStatsExtension>
 		</extensions>
 		<trkseg>
-			{{#trackpts}}
+			{{#trackPoints}}
 				<trkpt lat="{{lat}}" lon="{{lon}}">
 					<ele>{{ele}}</ele>
 					<time>{{time}}</time>
 				</trkpt>
-			{{/trackpts}}
+			{{/trackPoints}}
 		</trkseg>
 	</trk>
 
