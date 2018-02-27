@@ -3,7 +3,7 @@ const {bezieDistribute, sinRandDistribution} = require('./distributionFunctions.
 module.exports.getTrackPoints = function getTrackPoints(stepsCount, startLatitude, startLongitude, endLatitude, endLongitude,
                                          startTime, endTime, distanceDelta, timeDelta, heightDelta, heightPoints) {
     const trackpts = [];
-    const timeStep = (startTime - endTime) / stepsCount;
+    const timeStep = (endTime - startTime) / stepsCount;
     const latitudeStep = (endLatitude - startLatitude) / stepsCount;
     const longitudeStep = (endLongitude - startLongitude) / stepsCount;
     let lat = startLatitude;
