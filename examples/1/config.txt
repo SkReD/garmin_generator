@@ -1,0 +1,1 @@
+--start-longitude 45.710439048707485 --end-longitude 45.699554141610861 --start-latitude 53.945117192342877 --end-latitude 53.933471040800214 --steps-count 241 --height 120,80,220,20 --height-delta 10 --distance-delta 0.6 --time-delta 0.4 --start-time 1537196377 --end-time 1537198057

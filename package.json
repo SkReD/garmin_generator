@@ -9,6 +9,9 @@
     "mustache": "^2.3.0",
     "yargs": "^11.0.0"
   },
+  "devDependencies": {
+    "pkg": "latest"
+  },
   "pkg": {
     "scripts": "src/main.js",
     "assets": "src/track_template.xml"

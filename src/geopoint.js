@@ -1,151 +1,137 @@
 GeoPoint = module.exports.GeoPoint = function(lon, lat) {
+  switch (typeof lon) {
+    case "number":
+      this.lonDeg = this.dec2deg(lon, this.MAX_LON);
+      this.lonDec = lon;
 
+      break;
 
-    switch (typeof(lon)) {
+    case "string":
+      if (this.decode(lon)) {
+        this.lonDeg = lon;
+      }
 
-        case 'number':
+      this.lonDec = this.deg2dec(lon, this.MAX_LON);
 
-            this.lonDeg = this.dec2deg(lon, this.MAX_LON);
-            this.lonDec = lon;
+      break;
+  }
 
-            break;
+  switch (typeof lat) {
+    case "number":
+      this.latDeg = this.dec2deg(lat, this.MAX_LAT);
+      this.latDec = lat;
 
-        case 'string':
+      break;
 
-            if (this.decode(lon)) {
-                this.lonDeg = lon;
-            }
+    case "string":
+      if (this.decode(lat)) {
+        this.latDeg = lat;
+      }
 
-            this.lonDec = this.deg2dec(lon, this.MAX_LON);
+      this.latDec = this.deg2dec(lat, this.MAX_LAT);
 
-            break;
-    }
-
-    switch (typeof(lat)) {
-
-        case 'number':
-
-            this.latDeg = this.dec2deg(lat, this.MAX_LAT);
-            this.latDec = lat;
-
-            break;
-
-        case 'string':
-
-            if (this.decode(lat)) {
-                this.latDeg = lat;
-            }
-
-            this.latDec = this.deg2dec(lat, this.MAX_LAT);
-
-            break;
-
-    }
+      break;
+  }
 };
 
 GeoPoint.prototype = {
+  CHAR_DEG: "\u00B0",
+  CHAR_MIN: "\u0027",
+  CHAR_SEC: "\u0022",
+  CHAR_SEP: "\u0020",
 
-    CHAR_DEG : "\u00B0",
-    CHAR_MIN : "\u0027",
-    CHAR_SEC : "\u0022",
-    CHAR_SEP : "\u0020",
+  MAX_LON: 180,
+  MAX_LAT: 90,
 
-    MAX_LON: 180,
-    MAX_LAT: 90,
+  // decimal
+  lonDec: NaN,
+  latDec: NaN,
 
-    // decimal
-    lonDec: NaN,
-    latDec: NaN,
+  // degrees
+  lonDeg: NaN,
+  latDeg: NaN,
 
-    // degrees
-    lonDeg: NaN,
-    latDeg: NaN,
+  dec2deg: function(value, max) {
+    const sign = value < 0 ? -1 : 1;
 
-    dec2deg: function(value, max) {
+    const abs = Math.abs(Math.round(value * 1000000));
 
-        const sign = value < 0 ? -1 : 1;
-
-        const abs = Math.abs(Math.round(value * 1000000));
-
-        if (abs > (max * 1000000)) {
-            return NaN;
-        }
-
-        const dec = abs % 1000000 / 1000000;
-        const deg = Math.floor(abs / 1000000) * sign;
-        const min = Math.floor(dec * 60);
-        const sec = (dec - min / 60) * 3600;
-
-        let result = '';
-
-        result += deg;
-        result += this.CHAR_DEG;
-        result += this.CHAR_SEP;
-        result += min;
-        result += this.CHAR_MIN;
-        result += this.CHAR_SEP;
-        result += sec.toFixed(2);
-        result += this.CHAR_SEC;
-
-        return result;
-
-    },
-
-    deg2dec: function(value) {
-
-        let matches = this.decode(value);
-
-        if (!matches) {
-            return NaN;
-        }
-
-        const deg = parseFloat(matches[1]);
-        const min = parseFloat(matches[2]);
-        const sec = parseFloat(matches[3]);
-
-        if (isNaN(deg)) {
-            return NaN;
-        }
-
-        return deg + (isNaN(min) ? 0 : min / 60.0) + (isNaN(sec) ? 0 : (sec / 3600));
-    },
-
-    decode: function(value) {
-        let pattern = '';
-
-        // deg
-        pattern += "(-?\\d+)";
-        pattern += this.CHAR_DEG;
-        pattern += "\\s*";
-
-        // min
-        pattern += "([\\d\\.]+)";
-        pattern += this.CHAR_MIN;
-        pattern += "\\s*";
-
-        // sec
-        pattern += '(';
-        pattern += "(\\d+(?:\\.\\d+)?)";
-        pattern += this.CHAR_SEC;
-        pattern += ')?';
-
-        return value.match(new RegExp(pattern));
-    },
-
-    getLonDec: function() {
-        return this.lonDec;
-    },
-
-    getLatDec: function() {
-        return this.latDec;
-    },
-
-    getLonDeg: function() {
-        return this.lonDeg;
-    },
-
-    getLatDeg: function() {
-        return this.latDeg;
+    if (abs > max * 1000000) {
+      return NaN;
     }
 
+    const dec = (abs % 1000000) / 1000000;
+    const deg = Math.floor(abs / 1000000) * sign;
+    const min = Math.floor(dec * 60);
+    const sec = (dec - min / 60) * 3600;
+
+    let result = "";
+
+    result += deg;
+    result += this.CHAR_DEG;
+    result += this.CHAR_SEP;
+    result += min;
+    result += this.CHAR_MIN;
+    result += this.CHAR_SEP;
+    result += sec.toFixed(2);
+    result += this.CHAR_SEC;
+
+    return result;
+  },
+
+  deg2dec: function(value) {
+    let matches = this.decode(value);
+
+    if (!matches) {
+      return NaN;
+    }
+
+    const deg = parseFloat(matches[1]);
+    const min = parseFloat(matches[2]);
+    const sec = parseFloat(matches[3]);
+
+    if (isNaN(deg)) {
+      return NaN;
+    }
+
+    return deg + (isNaN(min) ? 0 : min / 60.0) + (isNaN(sec) ? 0 : sec / 3600);
+  },
+
+  decode: function(value) {
+    let pattern = "";
+
+    // deg
+    pattern += "(-?\\d+)";
+    pattern += this.CHAR_DEG;
+    pattern += "\\s*";
+
+    // min
+    pattern += "([\\d\\.]+)";
+    pattern += this.CHAR_MIN;
+    pattern += "\\s*";
+
+    // sec
+    pattern += "(";
+    pattern += "(\\d+(?:\\.\\d+)?)";
+    pattern += this.CHAR_SEC;
+    pattern += ")?";
+
+    return value.match(new RegExp(pattern));
+  },
+
+  getLonDec: function() {
+    return this.lonDec;
+  },
+
+  getLatDec: function() {
+    return this.latDec;
+  },
+
+  getLonDeg: function() {
+    return this.lonDeg;
+  },
+
+  getLatDeg: function() {
+    return this.latDeg;
+  }
 };
